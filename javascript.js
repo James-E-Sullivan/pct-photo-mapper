@@ -14,12 +14,21 @@ function initMap() {
     });
 }
   
+// get exif data from current image
+function getExif(image) {
+    EXIF.getData(image, () => {
+        let allMetaData = EXIF.getTag(this, "Flash");
+        console.log(allMetaData);
+    })
+}
 
 // Get object containing currently loaded/selected image
 function getCurrentImage() {
     return document.getElementById('pct-photo');
 }
 
+const EXIF = window.EXIF;
 
 window.initMap = initMap;
 let currentImage = getCurrentImage();
+window.onload=getExif(currentImage);
