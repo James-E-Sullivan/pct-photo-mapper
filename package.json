@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "jest": "^29.2.2"
+  },
+  "dependencies": {
+    "exif-js": "^2.3.0"
   }
 }
