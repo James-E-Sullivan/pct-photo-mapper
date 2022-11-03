@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PCT Photo Mapper</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <script src="javascript.js" defer></script>
 </head>
 <body>
@@ -15,7 +16,8 @@
             <img src="images/pct-images/washington.JPEG" alt="Alpine mountain in Washington State">
         </div>
         <div class="map-container">
-
+            <!--The div element for google map-->
+            <div id="map"></div>
         </div>
     </div>
     <div class="footer">
@@ -24,5 +26,16 @@
             <img src="images/logos/GitHub-Mark-Light-32px.png" alt="GitHub Logo">
         </a>
     </div>
+
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+      defer
+    ></script>
 </body>
 </html>
