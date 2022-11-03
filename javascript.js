@@ -1,17 +1,25 @@
 // Initialize and add the map
 function initMap() {
-    // The location of Uluru
-    const uluru = { lat: -25.344, lng: 131.031 };
-    // The map, centered at Uluru
+    // The location of South Lake Tahoe
+    const tahoe = { lat: 38.918, lng: -120.001 };
+    // The map, centered at South Lake Tahoe
     const map = new google.maps.Map(document.getElementById("map"), {
       zoom: 4,
-      center: uluru,
+      center: tahoe,
     });
-    // The marker, positioned at Uluru
+    // The marker, positioned at South Lake Tahoe
     const marker = new google.maps.Marker({
-      position: uluru,
+      position: tahoe,
       map: map,
     });
-  }
+}
   
-  window.initMap = initMap;
+
+// Get object containing currently loaded/selected image
+function getCurrentImage() {
+    return document.getElementById('pct-photo');
+}
+
+
+window.initMap = initMap;
+let currentImage = getCurrentImage();
