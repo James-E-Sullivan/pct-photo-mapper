@@ -1,0 +1,60 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #007377;
+    color: white;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.alignment-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    flex: auto;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;;
+}
+
+#pct-photo {
+    width: 600px;
+    height: auto;
+}
+
+.map-container {
+    width: 600px;
+    height: auto;
+}
+
+/* Set the size of the div element that contains the map */
+#map {
+    height: 400px;
+    /* The height is 400 pixels */
+    width: 100%;
+    /* The width is the width of the web page */
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 60px;
+    background-color: #003a40;
+    color: #b9bbbd;
+    height: 100px;
+    width: 100%;
+}
+
+.footer-element {
+    margin: 16px;
+}
