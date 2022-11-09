@@ -1,0 +1,167 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCT Photo Mapper</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <!-- 
+     The `defer` attribute causes the callback to execute after the full HTML
+     document has been parsed. For non-blocking uses, avoiding race conditions,
+     and consistent behavior across browsers, consider loading using Promises
+     with https://www.npmjs.com/package/@googlemaps/js-api-loader.
+    -->
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXYlHR80PFcsG7YPhi0-pfW8jBi1kJuDs&callback=initMap&v=weekly"
+    ></script>
+    <script src="{% static 'javascript.js' %}" defer></script>
+</head>
+<body>
+    <div class="alignment-container">
+        <h1>PCT Photo Mapper</h1>
+        <div class="image-container"></div>
+        <div class="button-container">
+            <button class="img-update-btn" id="prev-btn" hidden="true">Previous</button>
+            <button class="img-update-btn" id="next-btn">Next</button>
+        </div>
+        <div>
+            <div id="latitude"></div>
+            <br>
+            <div id="longitude"></div>
+        </div>
+        <div class="map-container">
+            <!--The div element for google map-->
+            <div id="map"></div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-element">Copyright © James E. Sullivan 2022</div>
+        <a href="https://github.com/James-E-Sullivan" class="footer-element">
+            <img src="{% static '/images/GitHub-Mark-Light-32px.png' %}" alt="GitHub Logo">
+        </a>
+    </div>
+
+    <!--
+        Safely outputs a Python object as JSON, wrapped in a <script> tab, ready for use
+        with Javascript. See https://docs.djangoproject.com/en/4.1/ref/templates/builtins/
+    -->
+    {{ geo_image_list|json_script:"geo-image-list" }}
+    <script>
+        const geoImageList = JSON.parse(document.getElementById('geo-image-list').textContent);
+        console.table(geoImageList);
+
+        let img_index = 0; // img_index for tracking place in list
+
+        let currentGeoImg = geoImageList[img_index]; // start at first img_index
+        updateCoordinates(currentGeoImg);
+        
+        // Create image element and populate its attributes
+        let imgElement = document.createElement('img');
+        imgElement.src = currentGeoImg['url'];
+        imgElement.alt = 'Image from the PCT';
+        imgElement.id = 'pct-photo';
+
+        // append image to image-container div
+        const imgContainerDiv = document.getElementsByClassName("image-container")[0];
+        imgContainerDiv.appendChild(imgElement);
+
+        // get previous and next button objects
+        prevBtn = document.getElementById('prev-btn');
+        nextBtn = document.getElementById('next-btn');
+        imgUpdateBtn = document.querySelectorAll('.img-update-btn');
+
+        function toggleButtons(index) {
+            // toggle previous button
+            if ((index <= 0 && prevBtn.hidden === false) || 
+                (index > 0 && prevBtn.hidden === true)) {
+                prevBtn.toggleAttribute('hidden');
+            } 
+            // toggle next button
+            if ((index >= geoImageList.length - 1 && nextBtn.hidden === false) ||
+                (index < geoImageList.length - 1 && nextBtn.hidden === true)) {
+                nextBtn.toggleAttribute('hidden');
+            }
+        }
+
+        function updateCoordinates(geo_image) {
+            let latDiv = document.getElementById('latitude');
+            let lonDiv = document.getElementById('longitude');
+
+            latDiv.textContent = 'Latitude: ' + geo_image['lat'];
+            lonDiv.textContent = 'Longitude: ' + geo_image['lon'];
+        }
+
+        function addUpdateBtnEventListener() {
+            imgUpdateBtn.forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    // increment/decrement img_index based on btn type
+                    if (btn.id === 'prev-btn') {
+                        img_index--;
+                    } else if (btn.id === 'next-btn') {
+                        img_index++;
+                    }
+                    toggleButtons(img_index); // toggle buttons as needed
+                    currentGeoImg = geoImageList[img_index]; // get new image
+                    imgElement.src = currentGeoImg['url']; // display new image from url
+                    updateCoordinates(currentGeoImg);
+                    // get new coordinates in format for google map & update map
+                    let newGoogleCoords = { lat: currentGeoImg.lat, lng: currentGeoImg.lon };
+                    updateMap(newGoogleCoords);
+                });
+            });
+        }
+
+
+        /*
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        Google Maps javascript code below this line
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        */
+
+        let map;
+        let marker;
+
+        // Initialize and add the map
+        function initMap() {
+            // Coordinates set to those of currentGeoImg
+            let startCoordinates = { lat: currentGeoImg.lat, lng: currentGeoImg.lon };
+            // The map, centered at startCoordinates
+            map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 4,
+            center: startCoordinates,
+            });
+            // The marker, positioned at startCoordinates
+            marker = new google.maps.Marker({
+            position: startCoordinates,
+            map: map,
+            });
+        }
+
+        function updateMap(newCoordinates) {
+            // remove previous marker
+            if (marker != null) {
+                marker.setMap(null);
+            }
+            // sets new map centered on new coordinates
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 6,
+                center: newCoordinates,
+            });
+            // set marker with new position on map
+            marker = new google.maps.Marker({
+                position: newCoordinates,
+                map: map,
+            });
+        }
+
+        // initialize google map
+        window.initMap = initMap();
+
+        // add event listener for image update buttons
+        addUpdateBtnEventListener();       
+    </script>
+</body>
+</html>
