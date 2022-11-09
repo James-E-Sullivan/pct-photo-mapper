@@ -1,9 +1,0 @@
-{
-  "devDependencies": {
-    "jest": "^29.2.2"
-  },
-  "dependencies": {
-    "browserify": "^17.0.0",
-    "exif-js": "^2.3.0"
-  }
-}
