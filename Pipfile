@@ -9,6 +9,7 @@ dj-database-url = "*"
 pillow = "*"
 boto3 = "*"
 psycopg2-binary = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
 
