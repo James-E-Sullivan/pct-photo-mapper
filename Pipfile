@@ -5,10 +5,10 @@ name = "pypi"
 
 [packages]
 django = "*"
-environ = "*"
 dj-database-url = "*"
 pillow = "*"
 boto3 = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 
