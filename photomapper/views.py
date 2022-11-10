@@ -8,7 +8,7 @@ def index(request):
     geo_image_list = list(geo_image_queryset.values())
 
     # return request, path, and context dict (to pass in objects)
-    return render(request, 'playground/index.html', {
+    return render(request, 'photomapper/index.html', {
         'geo_image_queryset': geo_image_queryset,
         'geo_image_list': geo_image_list,
     })
